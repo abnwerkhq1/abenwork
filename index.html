@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ABENWORK — Get found. Get customers.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050505;--bg2:#0e0e0e;--fg:#fff;--mut:#9a9a9a;--line:#262626;--y:#FFD400;--yt:#FFD400;--hot:#ff5a1f;--ok:#3ddc97;--err:#ff5d5d;--ink:#000;color-scheme:dark;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f6f5f0;--bg2:#fff;--fg:#0a0a0a;--mut:#666;--line:#dcdad2;--yt:#9a7600;color-scheme:light}}
+:root[data-theme="dark"]{--bg:#050505;--bg2:#0e0e0e;--fg:#fff;--mut:#9a9a9a;--line:#262626;--yt:#FFD400}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box;margin:0}
+body{height:100%;background:var(--bg);color:var(--fg);font-family:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;overflow:hidden}
+svg{display:block}
+button{font:inherit;cursor:pointer;border:0;color:inherit;background:none}
+input,select,textarea{font:inherit;color:inherit}
+
+/* logo + wordmark */
+.logo svg{width:100%;height:auto;overflow:visible}
+.logo polygon{fill:currentColor;transform-box:fill-box}
+.wm{display:inline-flex;overflow:hidden;max-width:0;transition:max-width 1.1s cubic-bezier(.7,0,.2,1);font-weight:700;letter-spacing:.04em;line-height:1.1;white-space:nowrap}
+.open .wm{max-width:12em}
+.wm i{font-style:normal;display:inline-block;transform:translateY(115%);transition:transform .7s cubic-bezier(.2,.9,.2,1);transition-delay:calc(.35s + var(--i)*.07s)}
+.open .wm i{transform:none}
+.wm .a{color:var(--fg)} .wm .w{color:var(--y)}
+.lockup{display:inline-flex;align-items:center;gap:.35em}
+
+/* intro */
+#intro{position:fixed;inset:0;z-index:50;background:#000;display:grid;place-items:center;transition:clip-path 1.1s cubic-bezier(.8,0,.2,1);clip-path:inset(0 0 0 0)}
+#intro.done{clip-path:inset(0 0 100% 0);pointer-events:none}
+#intro .lockup{font-size:clamp(34px,7vw,84px);color:#fff}
+#intro .logo{width:1.9em;color:#fff}
+#intro .wm .a{color:#fff}
+#intro .bl{animation:inL 1s cubic-bezier(.2,.9,.2,1) .2s both}
+#intro .br{animation:inR 1s cubic-bezier(.2,.9,.2,1) .2s both}
+#intro .logo{animation:pulse 1.2s ease-in-out 1.2s both}
+@keyframes inL{from{transform:translateX(-140%) skewX(-12deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes inR{from{transform:translateX(140%) skewX(12deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes pulse{0%,100%{filter:none}50%{filter:drop-shadow(0 0 18px var(--y))}}
+#intro .bar{position:absolute;bottom:14%;width:min(240px,50vw);height:2px;background:#222;overflow:hidden}
+#intro .bar::after{content:"";display:block;height:100%;background:var(--y);animation:load 2.8s cubic-bezier(.6,0,.2,1) both}
+@keyframes load{from{transform:translateX(-100%)}to{transform:none}}
+
+/* layout */
+.app{height:100%;display:grid;grid-template-columns:1.7fr 1fr;transition:grid-template-columns 1s cubic-bezier(.7,0,.2,1)}
+.app.signup{grid-template-columns:0fr 1fr}
+
+/* left */
+.hero{position:relative;overflow:hidden;min-width:0;background:#050505;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(24px,4vw,56px)}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 75% 45%,rgba(255,212,0,.15),transparent 70%),radial-gradient(40% 40% at 85% 90%,rgba(255,90,31,.14),transparent 70%)}
+.hero::after{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff0d 1px,transparent 1px),linear-gradient(90deg,#ffffff0d 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(70% 70% at 60% 45%,#000,transparent);-webkit-mask-image:radial-gradient(70% 70% at 60% 45%,#000,transparent)}
+.hero>*{position:relative;z-index:1}
+.hero .top{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.22em;color:#8a8a8a;text-transform:uppercase;white-space:nowrap}
+.copy{max-width:min(54%,520px)}
+.hero h1{font-size:clamp(32px,4.4vw,68px);line-height:1.02;letter-spacing:-.03em}
+.hero h1 em{font-style:normal;color:var(--y)}
+.hero p{margin-top:18px;color:#a5a5a5;font-size:clamp(14px,1.3vw,18px);line-height:1.5}
+.pill{display:inline-block;margin-top:26px;padding:8px 14px;border:1px solid #333;border-radius:99px;font-size:12px;color:#ccc;letter-spacing:.06em}
+.pill b{color:var(--y)}
+/* stage: right-hand zone reserved for logo + floating cards, never under the text */
+.stage{position:absolute!important;z-index:0!important;right:3%;top:14%;bottom:14%;width:40%;display:grid;place-items:center}
+.hero .big{width:100%;max-width:400px;transform:translate(calc(var(--mx,0)*16px),calc(var(--my,0)*10px));transition:transform .25s ease-out;filter:drop-shadow(0 0 40px rgba(255,212,0,.18))}
+.hero .big polygon{fill:rgba(255,255,255,.05);stroke:rgba(255,212,0,.6);stroke-width:3}
+.big .bl{animation:dl 5s ease-in-out infinite alternate}
+.big .br{animation:dr 5s ease-in-out infinite alternate}
+@keyframes dl{to{transform:translateX(-7%)}}
+@keyframes dr{to{transform:translateX(7%)}}
+.lead{position:absolute;z-index:2;background:#111d;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid #2c2c2c;border-radius:14px;padding:11px 15px;font-size:12.5px;max-width:230px;animation:fl 6s ease-in-out infinite alternate}
+.lead small{display:block;color:#8a8a8a;font-size:11px;margin-bottom:3px}
+.lead b{color:var(--y)}
+.l1{top:0;right:0}.l2{top:42%;left:0;animation-delay:-2s}.l3{bottom:0;right:0;animation-delay:-4s}
+@keyframes fl{to{transform:translateY(-14px)}}
+.ticker{overflow:hidden;white-space:nowrap;border-top:1px solid #222;padding-top:14px;color:#6f6f6f;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
+.ticker span{display:inline-block;animation:tk 28s linear infinite}
+@keyframes tk{to{transform:translateX(-50%)}}
+@media (max-width:1200px){.lead{display:none}.copy{max-width:58%}}
+
+/* right */
+.side{position:relative;min-width:0;overflow:hidden;background:var(--bg);border-left:1px solid var(--line)}
+.view{position:absolute;inset:0;overflow-y:auto;padding:clamp(22px,3.5vw,44px);display:flex;flex-direction:column;transition:opacity .5s,transform .7s cubic-bezier(.2,.9,.2,1)}
+.view>.in{margin:auto;width:100%}
+#login>.in{max-width:380px}
+#signup>.in{max-width:560px}
+.signup #login{opacity:0;transform:translateX(-40px);pointer-events:none}
+#signup{opacity:0;transform:translateX(60px);pointer-events:none}
+.signup #signup{opacity:1;transform:none;pointer-events:auto}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:30px;font-size:26px}
+.brand .logo{width:42px;color:var(--fg)}
+h2{font-size:25px;letter-spacing:-.02em}
+.sub{color:var(--mut);font-size:14px;margin:6px 0 24px;line-height:1.45}
+
+/* logo transition overlay (login <-> sign up) */
+#wipe{position:absolute;inset:0;z-index:5;background:var(--bg);display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .45s}
+#wipe.on{opacity:1;pointer-events:auto}
+#wipe .lockup{font-size:clamp(28px,4vw,52px)}
+#wipe .logo{width:1.9em;color:var(--fg)}
+#wipe.on .bl{animation:inL .9s cubic-bezier(.2,.9,.2,1) .15s both}
+#wipe.on .br{animation:inR .9s cubic-bezier(.2,.9,.2,1) .15s both}
+#wipe.on .logo{animation:pulse 1s ease-in-out .9s both}
+
+/* offer flashcard (one at a time) */
+.offer{display:flex;align-items:center;gap:14px;border:1px solid var(--line);background:var(--bg2);border-radius:14px;padding:12px 14px;margin-top:26px;min-height:70px;cursor:pointer;transition:border .2s}
+.offer:hover{border-color:var(--y)}
+.offer .ic{width:38px;height:38px;border-radius:10px;background:var(--y);color:#000;display:grid;place-items:center;font-size:18px;flex:none}
+.offer .tx{flex:1;min-width:0;transition:opacity .3s,transform .3s}
+.offer .tx.sw{opacity:0;transform:translateY(8px)}
+.offer b{display:block;font-size:13.5px;margin-bottom:2px}
+.offer small{color:var(--mut);font-size:12px;line-height:1.35;display:block}
+.pg{display:flex;flex-direction:column;gap:5px}
+.pg i{width:5px;height:5px;border-radius:50%;background:var(--line);transition:.3s}
+.pg i.on{background:var(--y);transform:scale(1.4)}
+
+/* fields */
+.fld{margin-bottom:16px;position:relative}
+.fld label{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+.fld input,.fld select,.fld textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;outline:0;transition:border .2s,box-shadow .2s;font-size:15px}
+.fld textarea{min-height:84px;resize:vertical}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--y);box-shadow:0 0 0 3px #ffd40026}
+.fld.bad input,.fld.bad select,.fld.bad textarea{border-color:var(--err)}
+.fld .msg{display:none;color:var(--err);font-size:12px;margin-top:5px}
+.fld.bad .msg{display:block}
+.eye{position:absolute;right:10px;top:30px;font-size:12px;color:var(--mut);padding:6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.meter{height:4px;background:var(--line);border-radius:4px;margin-top:8px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--err);transition:width .3s,background .3s}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--mut);margin:10px 0;line-height:1.4;cursor:pointer}
+.chk input{accent-color:var(--y);margin-top:2px;width:16px;height:16px;flex:none}
+.chk a{color:var(--yt)}
+.between{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin:2px 0 22px}
+.between a{color:var(--yt);text-decoration:none}
+.btn{width:100%;padding:14px;border-radius:10px;font-weight:700;font-size:15px;transition:transform .2s,box-shadow .2s,background .2s}
+.btn.p{background:var(--y);color:#000}
+.btn.p:hover{transform:translateY(-2px);box-shadow:0 10px 30px -8px var(--y)}
+.btn.o{border:1px solid var(--line);margin-top:10px}
+.btn.o:hover{border-color:var(--y);color:var(--yt)}
+.or{display:flex;align-items:center;gap:12px;color:var(--mut);font-size:12px;margin:20px 0 4px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* signup wizard */
+.top2{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.top2 .brand{margin:0;font-size:20px}.top2 .brand .logo{width:32px}
+.link{color:var(--mut);font-size:13px}.link:hover{color:var(--yt)}
+.prog{height:3px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:14px}
+.prog i{display:block;height:100%;width:33%;background:var(--y);transition:width .6s cubic-bezier(.7,0,.2,1)}
+.dots{display:flex;gap:18px;font-size:12px;color:var(--mut);margin-bottom:26px;letter-spacing:.08em;text-transform:uppercase}
+.dots span.on{color:var(--yt)}.dots span.done{color:var(--fg)}
+.steps{position:relative}
+.step{display:none}
+.step.on{display:block;animation:sl .6s cubic-bezier(.2,.9,.2,1)}
+@keyframes sl{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{cursor:pointer}
+.chips input{display:none}
+.chips span{display:block;padding:8px 14px;border:1px solid var(--line);border-radius:99px;font-size:13px;color:var(--mut);transition:.2s}
+.chips input:checked+span{background:var(--y);border-color:var(--y);color:#000;font-weight:700}
+.pcards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pcards label{cursor:pointer}
+.pcards input{display:none}
+.pcards div{border:1px solid var(--line);border-radius:12px;padding:14px 12px;height:100%;transition:.2s;background:var(--bg2)}
+.pcards b{display:block;font-size:15px}
+.pcards em{font-style:normal;display:block;color:var(--yt);margin:4px 0 8px;font-size:18px;font-weight:700}
+.pcards small{color:var(--mut);font-size:11.5px;line-height:1.35;display:block}
+.pcards input:checked+div{border-color:var(--y);box-shadow:0 0 0 3px #ffd40026}
+.terms{height:150px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:14px;font-size:12.5px;line-height:1.55;color:var(--mut);background:var(--bg2);margin-bottom:12px}
+.terms h4{color:var(--fg);margin:8px 0 2px;font-size:13px}
+.nav{display:flex;gap:10px;margin-top:22px}
+.nav .btn{margin:0}.nav .o{flex:.5}
+.sum{border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--mut);margin-bottom:12px;display:flex;justify-content:space-between;gap:10px}
+.sum b{color:var(--fg)}
+.fin{text-align:center;padding:30px 0}
+.fin .logo{width:110px;margin:0 auto 24px;color:var(--fg)}
+.fin .bl{animation:inL 1s cubic-bezier(.2,.9,.2,1) both}.fin .br{animation:inR 1s cubic-bezier(.2,.9,.2,1) both}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,40px);background:var(--y);color:#000;padding:12px 18px;border-radius:10px;font-size:14px;font-weight:700;opacity:0;transition:.4s;z-index:60;pointer-events:none;max-width:90vw}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:900px){
+ .app,.app.signup{grid-template-columns:1fr}
+ .hero{display:none}
+ .side{border:0}
+}
+@media (max-width:480px){.row,.pcards{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
+
+/* plans + wizard additions */
+.dots{flex-wrap:wrap;gap:8px 18px}
+#signup>.in{transition:max-width .6s cubic-bezier(.2,.9,.2,1)}
+#signup>.in.wide{max-width:880px}
+.plans3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:22px 0 10px;align-items:center}
+.pl{cursor:pointer;display:block;animation:fl 6s ease-in-out infinite alternate}
+.pl:nth-child(2){animation-delay:-2s}.pl:nth-child(3){animation-delay:-4s}
+.pl input{display:none}
+.pl .card{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:22px;padding:26px 20px;background:var(--bg2);transition:transform .3s,border .3s,box-shadow .3s}
+.pl.pop .card{padding:34px 20px;background:linear-gradient(160deg,color-mix(in srgb,var(--y) 16%,var(--bg2)),var(--bg2) 62%);border-color:#ffd40066}
+.pl:hover .card{border-color:var(--y)}
+.pl input:checked+.card{border-color:var(--y);transform:translateY(-6px) scale(1.03);box-shadow:0 0 0 3px #ffd40033,0 28px 60px -26px var(--y)}
+.pl .tag{position:absolute;top:16px;right:-34px;transform:rotate(35deg);background:var(--y);color:#000;font-size:10px;font-weight:700;padding:3px 38px;letter-spacing:.12em}
+.pl h3{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.pl .pr{font-size:44px;font-weight:700;letter-spacing:-.03em;margin:8px 0 0}
+.pl .pr small{font-size:13px;color:var(--mut);font-weight:400;letter-spacing:0}
+.pl ul{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:9px;font-size:13px;color:var(--mut)}
+.pl li::before{content:"✓";color:var(--yt);margin-right:8px;font-weight:700}
+.pl .pick{margin-top:20px;display:block;text-align:center;padding:11px;border-radius:11px;border:1px solid var(--line);font-size:13px;font-weight:700}
+.pl .pick::after{content:"Select"}
+.pl input:checked+.card .pick{background:var(--y);color:#000;border-color:var(--y)}
+.pl input:checked+.card .pick::after{content:"✓ Selected"}
+.plnote{text-align:center;color:var(--mut);font-size:12.5px;margin-top:8px}
+@media (max-width:720px){.plans3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="intro"><div class="lockup" id="introLock"><div class="logo" data-logo></div><span class="wm" data-wm></span></div><div class="bar"></div></div>
+
+<div class="app" id="app">
+  <!-- LEFT -->
+  <section class="hero" id="hero">
+    <div class="top"><span>Business network · Ads · Leads</span><span>Est. 2026</span></div>
+    <div class="stage">
+      <div class="logo big" data-logo></div>
+      <div class="lead l1"><small>New lead · just now</small>Kofi &amp; Sons Logistics wants a quote <b>+$4,200</b></div>
+      <div class="lead l2"><small>Ad performance</small>Your listing reached <b>12,480</b> buyers</div>
+      <div class="lead l3"><small>Verified</small>Profile viewed by <b>38 companies</b> today</div>
+    </div>
+    <div class="copy">
+      <h1>Be seen by the customers who <em>pay.</em></h1>
+      <p>ABENWORK is the business network built to advertise you, connect you, and deliver real customers — at a price that makes sense.</p>
+      <span class="pill"><b>●</b> 3 plans · start free, scale when you win</span>
+    </div>
+    <div class="ticker"><span>Retail · Logistics · Legal · Fintech · Construction · Agriculture · Design · Health · Education · Energy · Retail · Logistics · Legal · Fintech · Construction · Agriculture · Design · Health · Education · Energy · </span></div>
+  </section>
+
+  <!-- RIGHT -->
+  <section class="side">
+    <!-- LOGIN -->
+    <div class="view" id="login"><div class="in">
+      <div class="brand open"><div class="logo" data-logo></div><span class="wm" data-wm></span></div>
+      <h2>Welcome back</h2>
+      <p class="sub">Sign in to manage your business presence.</p>
+      <div class="fld"><label>Email or username</label><input id="lu" autocomplete="username" placeholder="you@company.com"></div>
+      <div class="fld"><label>Password</label><input id="lp" type="password" autocomplete="current-password" placeholder="••••••••"><button class="eye" data-eye="lp" type="button">SHOW</button></div>
+      <div class="between"><label class="chk" style="margin:0"><input type="checkbox"> Keep me signed in</label><a href="#login" onclick="return false">Forgot password?</a></div>
+      <button class="btn p" id="signin">Sign in</button>
+      <div class="or">New to ABENWORK?</div>
+      <button class="btn o" id="toSignup">Create a business account →</button>
+      <div class="offer" id="offer" title="Tap for the next one"><div class="ic" id="offerIc">◎</div><div class="tx" id="offerTx"></div><div class="pg" id="offerPg"></div></div>
+    </div></div>
+
+    <!-- SIGNUP -->
+    <div class="view" id="signup"><div class="in">
+      <div class="top2"><div class="brand open"><div class="logo" data-logo></div><span class="wm" data-wm></span></div><button class="link" id="toLogin">← Back to sign in</button></div>
+      <div class="prog"><i id="pbar"></i></div>
+      <div class="dots" id="dots"><span>1 · You</span><span>2 · Business</span><span>3 · Plan</span><span>4 · Agreement</span></div>
+
+      <div class="steps">
+        <!-- STEP 1 -->
+        <div class="step on" data-step="0">
+          <h2>Let’s start with you</h2><p class="sub">The person behind the business.</p>
+          <div class="fld"><label>Legal full name (business owner)</label><input name="owner" required minlength="3" autocomplete="name" placeholder="As on your ID"><div class="msg">Enter your full legal name.</div></div>
+          <div class="fld"><label>Business / company name</label><input name="biz" required minlength="2" autocomplete="organization" placeholder="Registered name"><div class="msg">Enter your business name.</div></div>
+          <div class="row">
+            <div class="fld"><label>Email address</label><input name="email" type="email" required autocomplete="email" placeholder="you@company.com"><div class="msg">Enter a valid email.</div></div>
+            <div class="fld"><label>Phone number</label><input name="phone" type="tel" required pattern="[0-9+()\s\-]{7,}" autocomplete="tel" placeholder="+1 555 000 0000"><div class="msg">Enter a valid phone.</div></div>
+          </div>
+          <div class="fld"><label>Username</label><input name="user" id="su" required pattern="[A-Za-z0-9_.]{3,}" autocomplete="username" placeholder="yourbrand"><div class="msg">3+ letters, numbers, _ or .</div></div>
+          <div class="fld"><label>Password</label><input name="pass" id="sp" type="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters"><button class="eye" data-eye="sp" type="button">SHOW</button><div class="meter"><i id="meter"></i></div><div class="msg">Use at least 8 characters.</div></div>
+        </div>
+        <!-- STEP 2 -->
+        <div class="step" data-step="1">
+          <h2>Tell us about the business</h2><p class="sub">This powers your profile, ad targeting and lead matching.</p>
+          <div class="row">
+            <div class="fld"><label>Industry</label><select name="ind" required><option value="">Select…</option><option value="hospitality">5-Star Hotels &amp; Restaurants</option><option value="software">Tech &amp; Software</option><option value="logistics">Logistics &amp; Transport</option><option value="construction">Construction</option><option value="fintech">Fintech &amp; Finance</option><option value="agriculture">Agriculture</option><option value="services">Professional Services</option><option value="retail">Retail &amp; E-commerce</option><option value="health">Health</option><option value="design">Design &amp; Creative</option><option value="education">Education</option><option value="energy">Energy</option><option value="other">Other</option></select><div class="msg">Pick an industry.</div></div>
+            <div class="fld"><label>Team size</label><select name="size" required><option value="">Select…</option><option>Just me</option><option>2–10</option><option>11–50</option><option>51–250</option><option>250+</option></select><div class="msg">Pick a size.</div></div>
+          </div>
+          <div class="row">
+            <div class="fld"><label>City &amp; country</label><input name="loc" required placeholder="Lagos, Nigeria"><div class="msg">Where are you based?</div></div>
+            <div class="fld"><label>Website (optional)</label><input name="web" type="url" placeholder="https://"></div>
+          </div>
+          <div class="fld"><label>What do you sell or offer?</label><textarea name="desc" required minlength="15" placeholder="Describe your products or services in a few lines…"></textarea><div class="msg">Add a short description (15+ characters).</div></div>
+          <div class="fld"><label>What are you here for?</label>
+            <div class="chips"><label><input type="checkbox" checked><span>Find customers</span></label><label><input type="checkbox"><span>Advertise</span></label><label><input type="checkbox"><span>Partnerships</span></label><label><input type="checkbox"><span>Hire talent</span></label><label><input type="checkbox"><span>Suppliers</span></label></div></div>
+          </div>
+        <!-- STEP 3: PLAN -->
+        <div class="step" data-step="2">
+          <h2>Pick your plan</h2><p class="sub">Start free and upgrade whenever you are ready.</p>
+          <div class="plans3"><label class="pl"><input type="radio" name="plan" value="Free" checked><div class="card"><h3>Free</h3><div class="pr">$0<small>/mo</small></div><ul><li>Basic business profile</li><li>5 leads per month</li><li>Directory listing</li></ul><span class="pick"></span></div></label><label class="pl pop"><input type="radio" name="plan" value="Growth"><div class="card"><span class="tag">POPULAR</span><h3>Growth</h3><div class="pr">$29<small>/mo</small></div><ul><li>Promoted listing</li><li>50 leads per month</li><li>Analytics dashboard</li><li>BIZ reels</li></ul><span class="pick"></span></div></label><label class="pl"><input type="radio" name="plan" value="Pro"><div class="card"><h3>Pro</h3><div class="pr">$79<small>/mo</small></div><ul><li>Unlimited leads</li><li>Ads manager</li><li>CRM &amp; chat tools</li><li>Verified badge</li><li>Priority support</li></ul><span class="pick"></span></div></label></div>
+          <p class="plnote">Paid plans are activated at checkout (coming soon). You will start on Free.</p>
+        </div>
+        <!-- STEP 4 -->
+        <div class="step" data-step="3">
+          <h2>Agreement &amp; terms</h2><p class="sub">Almost there — please review before creating your account.</p>
+          <div class="sum"><span>Account <b id="sAcc">—</b></span><span>Plan <b id="sPlan">Free</b></span></div>
+          <div class="terms">
+            <h4>1. Your account</h4>You confirm the information provided is accurate and that you are authorised to represent this business.
+            <h4>2. Advertising &amp; content</h4>Listings and ads must be truthful, lawful and not misleading. ABENWORK may remove content that breaks these rules.
+            <h4>3. Plans &amp; payments</h4>Paid plans renew until cancelled. Lead and ad charges are shown before you confirm any purchase.
+            <h4>4. Privacy</h4>We process your data to run the service and match you with customers. We never sell your personal data.
+            <h4>5. Termination</h4>You may close your account at any time. We may suspend accounts that violate these terms.
+            <p style="margin-top:8px">(Placeholder text — replace with final legal copy.)</p>
+          </div>
+          <label class="chk"><input type="checkbox" id="t1" required> <span>I agree to the <a href="#" onclick="return false">Terms &amp; Conditions</a> and <a href="#" onclick="return false">Advertising Policy</a>.</span></label>
+          <label class="chk"><input type="checkbox" id="t2" required> <span>I have read the <a href="#" onclick="return false">Privacy Policy</a>.</span></label>
+          <label class="chk"><input type="checkbox" id="t3"> <span>Send me tips, offers and product updates (optional).</span></label>
+          <div class="fld bad" id="tErr" style="display:none;margin:0"><div class="msg">Please accept the terms and privacy policy to continue.</div></div>
+        </div>
+        <!-- DONE -->
+        <div class="step" data-step="4"><div class="fin"><div class="logo" data-logo></div><h2>Welcome to ABENWORK, <span id="wName" style="color:var(--yt)"></span></h2><p class="sub" id="doneMsg">Creating your account…</p><button class="btn p" id="again" style="max-width:260px">Back to sign in</button></div></div>
+      </div>
+
+      <div class="nav" id="nav"><button class="btn o" id="back">Back</button><button class="btn p" id="next">Continue →</button></div>
+    </div></div>
+
+    <!-- LOGO TRANSITION OVERLAY -->
+    <div id="wipe"><div class="lockup"><div class="logo" data-logo></div><span class="wm" data-wm></span></div></div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>
+const LOGO='<svg viewBox="190 305 580 343" aria-hidden="true"><polygon class="bl" points="335,315 467,315 327,477 467,638 335,638 197,477"/><polygon class="br" points="493,315 625,315 763,477 625,638 493,638 633,477"/></svg>';
+document.querySelectorAll('[data-logo]').forEach(e=>e.innerHTML=LOGO);
+document.querySelectorAll('[data-wm]').forEach(e=>{
+  e.setAttribute('aria-label','ABENWORK');
+  e.innerHTML=[...'ABEN'].map((c,i)=>`<i class="a" style="--i:${i}">${c}</i>`).join('')+[...'WORK'].map((c,i)=>`<i class="w" style="--i:${i+4}">${c}</i>`).join('');
+});
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2600)};
+
+/* intro: logo only -> logo + name -> reveal */
+const lock=$('#introLock');
+setTimeout(()=>lock.classList.add('open'),1500);
+setTimeout(()=>$('#intro').classList.add('done'),3400);
+setTimeout(()=>$('#intro').style.display='none',4700);
+
+/* parallax on hero */
+$('#hero').addEventListener('mousemove',e=>{const r=e.currentTarget.getBoundingClientRect();const h=$('#hero');h.style.setProperty('--mx',((e.clientX-r.left)/r.width-.5).toFixed(2));h.style.setProperty('--my',((e.clientY-r.top)/r.height-.5).toFixed(2))});
+
+/* offer flashcard: one at a time, auto-rotates, tap for next */
+const OFFERS=[
+ {ic:'◎',t:'Get found',d:'Promoted profiles rank you in front of buyers searching your trade.'},
+ {ic:'⚡',t:'Win leads',d:'Qualified leads — pay per lead or per campaign. No waste.'},
+ {ic:'▤',t:'Command center',d:'Analytics, campaigns &amp; CRM in one powerful dashboard.'},
+ {ic:'★',t:'Plans that scale',d:'Free · Growth $29 · Pro $79. Start free, upgrade when you win.'}
+];
+let oi=0;
+const ot=$('#offerTx'),oic=$('#offerIc'),opg=$('#offerPg');
+opg.innerHTML=OFFERS.map(()=>'<i></i>').join('');
+function setOffer(n,fast){
+  oi=n;const o=OFFERS[n];ot.classList.add('sw');
+  setTimeout(()=>{oic.textContent=o.ic;ot.innerHTML='<b>'+o.t+'</b><small>'+o.d+'</small>';ot.classList.remove('sw');[...opg.children].forEach((d,i)=>d.classList.toggle('on',i===n))},fast?0:300);
+}
+setOffer(0,true);
+let offerTimer=setInterval(()=>setOffer((oi+1)%OFFERS.length),3800);
+$('#offer').addEventListener('click',()=>{clearInterval(offerTimer);setOffer((oi+1)%OFFERS.length);offerTimer=setInterval(()=>setOffer((oi+1)%OFFERS.length),3800)});
+
+/* show/hide password */
+$$('[data-eye]').forEach(b=>b.addEventListener('click',()=>{const i=document.getElementById(b.dataset.eye);const s=i.type==='password';i.type=s?'text':'password';b.textContent=s?'HIDE':'SHOW'}));
+
+/* login */
+/* login (Supabase) */
+async function login(){
+  const id=$('#lu').value.trim(),pw=$('#lp').value;
+  if(!id||!pw)return toast('Enter your email or username and password');
+  const b=$('#signin');b.disabled=true;b.textContent='Signing in…';
+  let email=id;
+  if(!id.includes('@')){const r=await sb.rpc('email_for_username',{u:id});email=r.data||''}
+  const r=email?await sb.auth.signInWithPassword({email,password:pw}):{error:{message:'Invalid login credentials'}};
+  b.disabled=false;b.textContent='Sign in';
+  if(r.error)return toast(/confirm/i.test(r.error.message)?'Please confirm your email first':'Wrong email/username or password');
+  toast('Welcome back!');setTimeout(()=>location.href='dashboard.html',500);
+}
+$('#signin').addEventListener('click',login);
+['lu','lp'].forEach(i=>$('#'+i).addEventListener('keydown',e=>{if(e.key==='Enter')login()}));
+sb.auth.getSession().then(r=>{if(r.data.session)setTimeout(()=>location.replace('dashboard.html'),3700)});
+
+/* logo transition between login and sign up */
+const app=$('#app'),wipe=$('#wipe');let busy=false;
+function logoWipe(mid){
+  if(busy)return;busy=true;
+  wipe.classList.remove('on','open');void wipe.offsetWidth;
+  wipe.classList.add('on');                              // overlay fades in, brackets slide together
+  setTimeout(mid,450);                                   // swap views / expand panel under the overlay
+  setTimeout(()=>wipe.classList.add('open'),800);        // wordmark reveals
+  setTimeout(()=>wipe.classList.remove('on'),2100);      // overlay lifts
+  setTimeout(()=>{wipe.classList.remove('open');busy=false},2650);
+}
+$('#toSignup').addEventListener('click',()=>{
+  logoWipe(()=>app.classList.add('signup'));
+  setTimeout(()=>{const f=$('.step.on input');f&&f.focus({preventScroll:true})},2300);
+});
+const toLogin=()=>logoWipe(()=>{app.classList.remove('signup');if(cur===4)show(0)});
+$('#toLogin').addEventListener('click',toLogin);
+
+/* wizard */
+const steps=$$('.step'),dots=$$('#dots span'),LAST=3,inEl=$('#signup .in');let cur=0;
+function show(n){
+  cur=n;steps.forEach((s,i)=>s.classList.toggle('on',i===n));
+  dots.forEach((d,i)=>{d.classList.toggle('on',i===n);d.classList.toggle('done',i<n)});
+  $('#pbar').style.width=Math.min(n+1,4)/4*100+'%';
+  $('#back').style.display=n===0?'none':'';
+  $('#next').textContent=n===LAST?'Create account ✓':'Continue →';
+  $('#nav').style.display=n===4?'none':'flex';
+  inEl.classList.toggle('wide',n===2);
+  $('.view#signup').scrollTo({top:0,behavior:'smooth'});
+  if(n===LAST){$('#sAcc').textContent='@'+($('#su').value||'—');$('#sPlan').textContent=document.querySelector('[name=plan]:checked').value}
+}
+function validate(n){
+  let ok=true;
+  $$('.step[data-step="'+n+'"] .fld').forEach(f=>{
+    const i=f.querySelector('input,select,textarea');if(!i)return;
+    const good=i.checkValidity();f.classList.toggle('bad',!good);if(!good)ok=false;
+  });
+  if(n===LAST){ok=$('#t1').checked&&$('#t2').checked;$('#tErr').style.display=ok?'none':'block'}
+  if(!ok){const b=$('.step.on .bad');b&&b.scrollIntoView({block:'center',behavior:'smooth'})}
+  return ok;
+}
+const friendly=m=>/database error|already/i.test(m)?'That email or username is already in use.':/password/i.test(m)?'Choose a stronger password.':m;
+async function userFree(){
+  const r=await sb.rpc('username_available',{u:$('#su').value.trim().toLowerCase()});
+  return r.error?true:r.data!==false;
+}
+async function submit(){
+  const v=n=>(document.querySelector('[name='+n+']').value||'').trim(),b=$('#next');
+  b.disabled=true;b.textContent='Creating…';
+  const redirect=location.protocol.indexOf('http')===0?new URL('dashboard.html',location.href).href:undefined;
+  const r=await sb.auth.signUp({email:v('email'),password:$('#sp').value,options:{emailRedirectTo:redirect,data:{
+    owner_name:v('owner'),business_name:v('biz'),phone:v('phone'),username:v('user').toLowerCase(),category:v('ind'),team_size:v('size'),
+    city:v('loc'),website:v('web'),description:v('desc'),goals:$$('.chips input:checked + span').map(s=>s.textContent),
+    plan:document.querySelector('[name=plan]:checked').value.toLowerCase(),marketing_opt_in:$('#t3').checked,terms_accepted:true,terms_version:'v1'}}});
+  b.disabled=false;b.textContent='Create account ✓';
+  const taken=r.data&&r.data.user&&r.data.user.identities&&r.data.user.identities.length===0;
+  if(r.error||taken){toast(friendly(r.error?r.error.message:'already registered'));show(0);return}
+  $('#wName').textContent=v('owner').split(' ')[0];
+  show(4);$('#pbar').style.width='100%';dots.forEach(d=>d.classList.add('done'));
+  if(r.data.session){$('#doneMsg').textContent='Your account is ready. Taking you to your dashboard…';setTimeout(()=>location.href='dashboard.html',1600)}
+  else $('#doneMsg').textContent='Almost there — check '+v('email')+' for a confirmation link, then sign in.';
+}
+$('#next').addEventListener('click',async()=>{
+  if(!validate(cur))return;
+  const b=$('#next');
+  if(cur===0){
+    b.disabled=true;const free=await userFree();b.disabled=false;
+    if(!free){const f=$('#su').closest('.fld');f.querySelector('.msg').textContent='That username is taken.';f.classList.add('bad');return}
+  }
+  if(cur===LAST)return submit();
+  show(cur+1);
+});
+$('#back').addEventListener('click',()=>show(cur-1));
+$$('.fld input,.fld select,.fld textarea').forEach(i=>i.addEventListener('input',()=>{const f=i.closest('.fld');f.classList.remove('bad');if(i.id==='su')f.querySelector('.msg').textContent='3+ letters, numbers, _ or .'}));
+$('#sp').addEventListener('input',e=>{
+  const v=e.target.value;let s=0;
+  if(v.length>=8)s++;if(/[A-Z]/.test(v)&&/[a-z]/.test(v))s++;if(/\d/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  const m=$('#meter');m.style.width=s*25+'%';m.style.background=['#ff5d5d','#ff5d5d','#ff5a1f','#FFD400','#3ddc97'][s];
+});
+$('#again').addEventListener('click',toLogin);
+show(0);
+</script>
+</body>
+</html>
